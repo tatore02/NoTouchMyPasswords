@@ -18,6 +18,11 @@ def deletePassword(indexPassword: int) -> None:
     saveAllPasswords()
 
 
+def editPassword(indexPassword: int, newPassword: Password) -> None:
+    globalPasswords[indexPassword] = newPassword
+    saveAllPasswords()
+
+
 def getServices() -> list[str]:
     services = []
     for password in globalPasswords:

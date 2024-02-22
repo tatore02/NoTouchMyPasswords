@@ -1,6 +1,6 @@
 from fernetKey import generateKey
 from password import Password
-from passwordServices import addPassword, getServices, deletePassword, getPassword
+from passwordServices import addPassword, getServices, deletePassword, getPassword, editPassword
 from utils import printListWithIndex
 
 
@@ -15,23 +15,29 @@ def main():
         return
 
     while True:
-        print("1. Add a new password\n" +
-              "2. Show all services\n" +
-              "3. Show a password\n" +
-              "4. Delete a password")
+        print("1. Show all services\n" +
+              "2. Show a password\n" +
+              "3. Add a new password\n" +
+              "4. Edit a password\n" +
+              "5. Delete a password")
         choice = input("Enter your choice:").strip()
         if choice == "1":
-            password = insertNewPassword()
-            addPassword(password)
-        elif choice == "2":
             printListWithIndex(getServices())
-        elif choice == "3":
+        elif choice == "2":
             printListWithIndex(getServices())
             print("Select the password to show:")
             indexToShow = chooseService()
             if indexToShow is not None:
                 print(getPassword(indexToShow))
+        elif choice == "3":
+            password = insertNewPassword()
+            addPassword(password)
         elif choice == "4":
+            print("Select the password to edit:")
+            indexToEdit = chooseService()
+            if indexToEdit is not None:
+                editPassword(indexToEdit, insertNewPassword())
+        elif choice == "5":
             print("Select the password to delete:")
             indexToDelete = chooseService()
             if indexToDelete is not None:
