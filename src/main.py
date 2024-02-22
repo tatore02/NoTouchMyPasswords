@@ -1,8 +1,7 @@
-from fernetKey import generateKey, loadKey
+from fernetKey import generateKey
 from password import Password
-from passwordServices import loadPasswords, addPassword, showPasswords, showServices, saveAllPasswords
-
-globalPasswords = list[Password]()
+from passwordServices import addPassword, getServices, deletePassword, getPassword
+from utils import printListWithIndex
 
 
 def main():
@@ -14,31 +13,49 @@ def main():
         print("Key generated successfully\nNow select the file secret.key")
     else:
         return
-    key = loadKey()
-
-    global globalPasswords
-    globalPasswords = loadPasswords(key)
 
     while True:
-        print("1. Add a new password")
-        print("2. Show all passwords")
-        print("3. Delete a password")
+        print("1. Add a new password\n" +
+              "2. Show all services\n" +
+              "3. Show a password\n" +
+              "4. Delete a password")
         choice = input("Enter your choice:").strip()
         if choice == "1":
-            addPassword(globalPasswords, key)
+            password = insertNewPassword()
+            addPassword(password)
         elif choice == "2":
-            print(showPasswords(globalPasswords))
+            printListWithIndex(getServices())
         elif choice == "3":
+            printListWithIndex(getServices())
+            print("Select the password to show:")
+            indexToShow = chooseService()
+            if indexToShow is not None:
+                print(getPassword(indexToShow))
+        elif choice == "4":
             print("Select the password to delete:")
-            print(showServices(globalPasswords))
-            index = int(input("Enter the index of password to delete:"))
-            if 1 <= index <= len(globalPasswords):
-                globalPasswords.pop(index - 1)
-                saveAllPasswords(globalPasswords, key)
-            else:
-                print("Invalid index")
+            indexToDelete = chooseService()
+            if indexToDelete is not None:
+                deletePassword(indexToDelete)
         else:
             return
+
+
+def insertNewPassword() -> Password:
+    service = input("Service:").strip()
+    username = input("Username:").strip()
+    password = input("Password:").strip()
+    return Password(service, username, password)
+
+
+def chooseService() -> int | None:
+    services = getServices()
+    printListWithIndex(services)
+    index = int(input("Enter the index:"))
+    if 0 <= index < len(services):
+        return index
+    else:
+        print("Invalid index")
+        return None
 
 
 main()
