@@ -1,5 +1,6 @@
 from cryptography.fernet import Fernet
-from tkinter import filedialog, Tk
+
+FILE_PATH = ""
 
 
 def generateKey() -> None:
@@ -9,7 +10,11 @@ def generateKey() -> None:
 
 
 def loadKey() -> bytes:
-    # filePath = filedialog.askopenfilename(title="Select the file secret.key")
-    with open("secret.key", "rb") as keyFile:
+    with open(FILE_PATH, "rb") as keyFile:
         key = keyFile.read()
     return key
+
+
+def setFilePath(filePath: str) -> None:
+    global FILE_PATH
+    FILE_PATH = filePath

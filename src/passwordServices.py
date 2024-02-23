@@ -1,7 +1,12 @@
 from password import Password
 from crypto import appendEncryptedPasswordToFile, readEncryptedPasswordsFromFile
 
-globalPasswords = readEncryptedPasswordsFromFile()
+globalPasswords = list[Password]()
+
+
+def fillGlobalPasswords() -> None:
+    global globalPasswords
+    globalPasswords = readEncryptedPasswordsFromFile()
 
 
 def saveAllPasswords() -> None:

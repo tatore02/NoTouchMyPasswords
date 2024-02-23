@@ -4,7 +4,7 @@ from password import Password
 import pickle
 
 FILE_NAME = "passwords.dat"
-key = loadKey()
+key = None
 
 
 def readEncryptedPasswordsFromFile() -> list[Password]:
@@ -25,12 +25,20 @@ def appendEncryptedPasswordToFile(passwords: list[Password]()):
 
 
 def encryptPassword(password: Password):
+    _checkKey()
     f = Fernet(key)
     serializedPassword = pickle.dumps(password)
     return f.encrypt(serializedPassword)
 
 
 def decryptPassword(encryptedData):
+    _checkKey()
     f = Fernet(key)
     decrypted_data = f.decrypt(encryptedData)
     return pickle.loads(decrypted_data)
+
+
+def _checkKey():
+    global key
+    if key is None:
+        key = loadKey()

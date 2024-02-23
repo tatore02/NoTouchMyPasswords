@@ -1,18 +1,29 @@
-from fernetKey import generateKey
+from fernetKey import generateKey, setFilePath
 from password import Password
-from passwordServices import addPassword, getServices, deletePassword, getPassword, editPassword
+from passwordServices import fillGlobalPasswords, addPassword, getServices, deletePassword, getPassword, editPassword
 from utils import printListWithIndex
+from tkinter import filedialog, Tk
+
+
+def startup(filePath: str) -> None:
+    setFilePath(filePath)
+    fillGlobalPasswords()
 
 
 def main():
+    tkinterRoot = Tk()
     choice = input("Do you already have a secret key? (y/n):").strip().lower()
     if choice == "y":
         print("Select the file secret.key")
+        filePath = filedialog.askopenfilename(title="Select the file secret.key")
     elif choice == "n":
         generateKey()
+        filePath = "secret.key"
         print("Key generated successfully\nNow select the file secret.key")
     else:
         return
+
+    startup(filePath)
 
     while True:
         print("1. Show all services\n" +
@@ -26,34 +37,34 @@ def main():
         elif choice == "2":
             printListWithIndex(getServices())
             print("Select the password to show:")
-            indexToShow = chooseService()
+            indexToShow = _chooseService()
             if indexToShow is not None:
                 print(getPassword(indexToShow))
         elif choice == "3":
-            password = insertNewPassword()
+            password = _insertNewPassword()
             addPassword(password)
         elif choice == "4":
             print("Select the password to edit:")
-            indexToEdit = chooseService()
+            indexToEdit = _chooseService()
             if indexToEdit is not None:
-                editPassword(indexToEdit, insertNewPassword())
+                editPassword(indexToEdit, _insertNewPassword())
         elif choice == "5":
             print("Select the password to delete:")
-            indexToDelete = chooseService()
+            indexToDelete = _chooseService()
             if indexToDelete is not None:
                 deletePassword(indexToDelete)
         else:
             return
 
 
-def insertNewPassword() -> Password:
+def _insertNewPassword() -> Password:
     service = input("Service:").strip()
     username = input("Username:").strip()
     password = input("Password:").strip()
     return Password(service, username, password)
 
 
-def chooseService() -> int | None:
+def _chooseService() -> int | None:
     services = getServices()
     printListWithIndex(services)
     index = int(input("Enter the index:"))
@@ -64,4 +75,9 @@ def chooseService() -> int | None:
         return None
 
 
-main()
+if __name__ == "__main__":
+    window = Tk()
+    window.geometry("600x600")
+    window.title("Hello TkInter!")
+    window.resizable(False, False)
+    window.configure(background="white")
